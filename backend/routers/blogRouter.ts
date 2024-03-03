@@ -1,11 +1,36 @@
 import {Hono} from 'hono'
 import { Router } from 'itty-router'
-const app = new Hono()
-const blogRouter = Router()
+
+const blogRouter  = new Hono<{
+	Bindings: {
+		DATABASE_URL: string,
+		DIRECT_URL : string,
+		JWT_SECRET : string
+	}
+}>();
+
+import { PrismaClient } from '@prisma/client/edge'
+import { withAccelerate } from '@prisma/extension-accelerate'
 
 
-blogRouter.post('/', c => {
-    console.log(c);
+
+
+blogRouter.post('/', async c => {
+    const body = await c.req.json();
+    console.log(body);
+    const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    const res = await prisma.post.create({
+        data : {
+            title: body.title,
+            content : body.content
+        }
+    }
+    );
+
+
     const obj = {
         msg : "success"
     };

@@ -6,30 +6,19 @@ import { withAccelerate } from '@prisma/extension-accelerate'
 import {z} from 'zod'
 import { decode, sign, verify } from 'hono/jwt'
 import blogRouter from '../routers/blogRouter'
+import userRouter from '../routers/userRouter'
 
 const app = new Hono<{
 	Bindings: {
 		DATABASE_URL: string,
-		DIRECT_URL : string
+		DIRECT_URL : string,
+		JWT_SECRET : string
 	}
 }>();
-const router = Router()
-
-import * as dotenv from 'dotenv';
-import userRouter from '../routers/userRouter'
-dotenv.config();
-
-
-interface validBody{
-    name ?: string, 
-    password: string,
-    email : string,
-};
 
 
 app.use('/api/v1/blog/*', async (c, next) => {
 	const jwt = c.req.header('Authorization');
-	// console.log(jwt)
 	if (!jwt) {
 		c.status(401);
 		return c.json({ error: "unauthorized" });
@@ -51,11 +40,11 @@ app.use('/api/v1/blog/*', async (c, next) => {
 		})
 	}
 	await next()
-})
+});
 
 
-app.mount('/api/v1/blog', blogRouter.handle)
-app.mount('/api/v1/user', userRouter.handle)
+app.route('/api/v1/blog', blogRouter)
+app.route('/api/v1/user', userRouter)
 
 
 
