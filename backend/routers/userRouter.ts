@@ -1,17 +1,18 @@
 import {Hono} from 'hono'
 import { Router } from 'itty-router'
+import { PrismaClient } from '@prisma/client/scripts/default-index.js';
+import { decode, sign, verify } from 'hono/jwt'
+
 const userRouter = new Hono<{
 	Bindings: {
 		DATABASE_URL: string,
 		DIRECT_URL : string,
 		JWT_SECRET : string
-	}
+	}, Variables : {
+        prisma : PrismaClient
+    }
 }>();
 
-import { decode, sign, verify } from 'hono/jwt'
-import { PrismaClient } from '@prisma/client/edge'
-import { withAccelerate } from '@prisma/extension-accelerate'
-import { Bindings } from 'hono/types'
 
 interface validBody{
     name ?: string, 
@@ -20,18 +21,12 @@ interface validBody{
 };
 
 
-const prisma = new PrismaClient({
-    datasourceUrl: `prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmI4N2JmMTYtNzc2Mi00ZTEzLTk5NzktNTNiNjdjZjY0MmNjIiwidGVuYW50X2lkIjoiNzdiOTFiYzVjNzY1Y2QyNTAwOTY2ODEwMDAwMGY4N2UyNGFmZDg5NTkxNmExMDFkY2E1ZjRmMjc2MjkwYmY3YSIsImludGVybmFsX3NlY3JldCI6IjY3MjU2NGE1LTYzMjctNDBlZC04MGNlLTY4OTkyZWUxNWRhMiJ9.OsM55GpS5GRIPCGyd9lYSqFqlee6d7RUPQ1YL80-05Y`,
-}).$extends(withAccelerate());
-
-
-
 userRouter.post('/signup', async c => {
     // console.log(c);
-    
     const body : validBody = await c.req.json();
-    console.log(body);
-    const res1 = await prisma.user.findFirst({
+    console.log(body, c.get('prisma'));
+    
+    const res1 = await c.get('prisma').user.findFirst({
         where: {
             email : body.email
         },
@@ -39,7 +34,7 @@ userRouter.post('/signup', async c => {
             email : true
         }
     });
-    // console.log(res1);
+    console.log(res1);
     if(res1 !== null){
         const obj = {
             msg : "User already exists."
@@ -50,7 +45,7 @@ userRouter.post('/signup', async c => {
     }
 
     try{
-        const res2 = await prisma.user.create({
+        const res2 = await c.get('prisma').user.create({
             data:{
                 name : body.name ,
                 email : body.email,
@@ -80,7 +75,7 @@ userRouter.post('/signup', async c => {
 userRouter.post('/signin', async c => {
     const body : validBody = await c.req.json();
     console.log(body);
-    const res1 = await prisma.user.findFirst({
+    const res1 = await c.get("prisma").user.findFirst({
         where: {
             email : body.email
         },

@@ -2,7 +2,6 @@ import { Hono } from 'hono'
 import { Router } from 'itty-router'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
-// import auth from '../middleware/auth'
 import {z} from 'zod'
 import { decode, sign, verify } from 'hono/jwt'
 import blogRouter from '../routers/blogRouter'
@@ -13,24 +12,36 @@ const app = new Hono<{
 		DATABASE_URL: string,
 		DIRECT_URL : string,
 		JWT_SECRET : string
+	}, Variables : {
+		prisma : PrismaClient
 	}
 }>();
 
 
+app.use("*", async (c, next) => {
+	const prisma = new PrismaClient({
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+	c.set('prisma', prisma);
+	await next();
+});
+
 app.use('/api/v1/blog/*', async (c, next) => {
 	const jwt = c.req.header('Authorization');
+    
+
 	if (!jwt) {
 		c.status(401);
 		return c.json({ error: "unauthorized" });
 	}
 	try{
 		const token = jwt.split(' ')[1];
-		const payload = await verify(token, 'mySecret');
+		// console.log(token)
+		const payload = await verify(token, c.env.JWT_SECRET);
 		if (!payload) {
 			c.status(401);
 			return c.json({ error: "unauthorized" });
 		}
-		// c.set('email', payload.email);
 	}catch(err){
 		const obj = {
 			msg : "wrong token"
