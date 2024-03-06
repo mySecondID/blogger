@@ -1,17 +1,11 @@
 import {Hono} from 'hono'
 import { Router } from 'itty-router'
-const userRouter = new Hono<{
-	Bindings: {
-		DATABASE_URL: string,
-		DIRECT_URL : string,
-		JWT_SECRET : string
-	}
-}>();
+const app = new Hono()
+const userRouter = Router()
 
 import { decode, sign, verify } from 'hono/jwt'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
-import { Bindings } from 'hono/types'
 
 interface validBody{
     name ?: string, 
@@ -24,12 +18,14 @@ const prisma = new PrismaClient({
     datasourceUrl: `prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmI4N2JmMTYtNzc2Mi00ZTEzLTk5NzktNTNiNjdjZjY0MmNjIiwidGVuYW50X2lkIjoiNzdiOTFiYzVjNzY1Y2QyNTAwOTY2ODEwMDAwMGY4N2UyNGFmZDg5NTkxNmExMDFkY2E1ZjRmMjc2MjkwYmY3YSIsImludGVybmFsX3NlY3JldCI6IjY3MjU2NGE1LTYzMjctNDBlZC04MGNlLTY4OTkyZWUxNWRhMiJ9.OsM55GpS5GRIPCGyd9lYSqFqlee6d7RUPQ1YL80-05Y`,
 }).$extends(withAccelerate());
 
+const mySecret = "mySecret";
+
 
 
 userRouter.post('/signup', async c => {
     // console.log(c);
     
-    const body : validBody = await c.req.json();
+    const body : validBody = await c.json();
     console.log(body);
     const res1 = await prisma.user.findFirst({
         where: {
@@ -78,7 +74,8 @@ userRouter.post('/signup', async c => {
 
 
 userRouter.post('/signin', async c => {
-    const body : validBody = await c.req.json();
+    const body : validBody = await c.json();
+    // console.log(c.env?.DATABASE_URL);
     console.log(body);
     const res1 = await prisma.user.findFirst({
         where: {
@@ -96,7 +93,7 @@ userRouter.post('/signin', async c => {
             status : 404,
         })
     }
-    const token = await sign(body, c.env.JWT_SECRET);
+    const token = await sign(body, mySecret);
     const obj = {
         msg : "success",
         token : token
