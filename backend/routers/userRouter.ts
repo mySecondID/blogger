@@ -76,10 +76,12 @@ userRouter.post('/signin', async c => {
     console.log(body);
     const res1 = await c.get("prisma").user.findFirst({
         where: {
-            email : body.email
+            email : body.email,
+            password : body.password
         },
         select : {
-            email : true
+            email : true,
+            id : true
         } 
     });
     console.log(res1);
@@ -88,13 +90,14 @@ userRouter.post('/signin', async c => {
             msg : "User not found."
         }
         return new Response (JSON.stringify(obj),{
-            status : 404,
+            status : 403,
         })
     }
     const token = await sign(body, c.env.JWT_SECRET);
     const obj = {
         msg : "success",
-        token : token
+        token : token,
+        id : res1.id
     };
     return new Response (JSON.stringify(obj),{
         status : 200,

@@ -83,17 +83,17 @@ blogRouter.put('/', async c => {
 });
 
 
-
-blogRouter.get('/bulk', async c => {
-    const body = await c.req.json();
+blogRouter.get('/bulk/:id', async c => {
+    const authorID = c.req.param('id');
     try{
         const res = await c.get('prisma').post.findMany({
             where : {
-                authorId : body.id
+                authorId : authorID
             },
             select : {
                 title : true,
-                content : true
+                content : true,
+                id : true
             }
         })
         return new Response (JSON.stringify(res),{
@@ -141,5 +141,6 @@ blogRouter.get('/:id', async c => {
     
      
 });
+
 
 export default blogRouter;

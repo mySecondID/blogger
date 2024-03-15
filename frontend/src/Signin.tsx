@@ -1,10 +1,13 @@
 import React, { EventHandler, useState } from "react";
 import axios from "axios"
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"
 
 export default function Signin(){
     const [name, setUsername] = useState();
     const [password, setPassword] = useState();
     const [email, setEmail] = useState();
+    const navigate = useNavigate();
 
     return (
         <div>
@@ -20,9 +23,16 @@ export default function Signin(){
                         email : email
                     });
                     const body = response.data;
+                    if(response.status !== 200){
+                        alert(body.msg);
+                    }else{
+                        Cookies.set('token', body.token);
+                        Cookies.set('id', body.id);
+                        navigate("/blogs/" + body.id);
+                    }
                     console.log(body);
                 }catch(err){
-                    console.log("error: ", err);
+                    alert("error");
                 }
             }}>Submit</button>
         </div>

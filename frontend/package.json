@@ -11,8 +11,10 @@
   },
   "dependencies": {
     "@types/cors": "^2.8.17",
+    "@types/js-cookie": "^3.0.6",
     "axios": "^1.6.7",
     "cors": "^2.8.5",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3"

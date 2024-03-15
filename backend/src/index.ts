@@ -32,8 +32,7 @@ app.use("*", async (c, next) => {
 
 app.use('/api/v1/blog/*', async (c, next) => {
 	const jwt = c.req.header('Authorization');
-    
-
+	// console.log(jwt)
 	if (!jwt) {
 		c.status(401);
 		return c.json({ error: "unauthorized" });
@@ -42,10 +41,11 @@ app.use('/api/v1/blog/*', async (c, next) => {
 		const token = jwt.split(' ')[1];
 		// console.log(token)
 		const payload = await verify(token, c.env.JWT_SECRET);
-		if (!payload) {
+		if(!payload){
 			c.status(401);
 			return c.json({ error: "unauthorized" });
 		}
+		await next()
 	}catch(err){
 		const obj = {
 			msg : "wrong token"
@@ -54,7 +54,6 @@ app.use('/api/v1/blog/*', async (c, next) => {
 			status : 400
 		})
 	}
-	await next()
 });
 
 
