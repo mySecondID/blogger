@@ -24,8 +24,7 @@ interface validBody{
 userRouter.post('/signup', async c => {
     // console.log(c);
     const body : validBody = await c.req.json();
-    console.log(body, c.get('prisma'));
-    
+    console.log(body);
     const res1 = await c.get('prisma').user.findFirst({
         where: {
             email : body.email
@@ -40,7 +39,7 @@ userRouter.post('/signup', async c => {
             msg : "User already exists."
         };
         return new Response (JSON.stringify(obj),{
-            status : 200,
+            status : 400,
         })
     }
 
@@ -83,6 +82,7 @@ userRouter.post('/signin', async c => {
             email : true
         } 
     });
+    console.log(res1);
     if(res1 === null){
         const obj = {
             msg : "User not found."

@@ -6,6 +6,9 @@ import {z} from 'zod'
 import { decode, sign, verify } from 'hono/jwt'
 import blogRouter from '../routers/blogRouter'
 import userRouter from '../routers/userRouter'
+import { cors } from 'hono/cors'
+// import { PrismaClient } from '@prisma/client/scripts/default-deno-edge.js'
+
 
 const app = new Hono<{
 	Bindings: {
@@ -17,6 +20,7 @@ const app = new Hono<{
 	}
 }>();
 
+app.use('/api/*', cors())
 
 app.use("*", async (c, next) => {
 	const prisma = new PrismaClient({
