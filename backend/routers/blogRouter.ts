@@ -93,7 +93,8 @@ blogRouter.get('/bulk/:id', async c => {
             select : {
                 title : true,
                 content : true,
-                id : true
+                id : true,
+                time : true
             }
         })
         return new Response (JSON.stringify(res),{
@@ -116,7 +117,8 @@ blogRouter.get('/:id', async c => {
                 id : postID
             }, select : {
                 title : true,
-                content : true
+                content : true,
+                time : true
             }
         });
         // console.log(res);

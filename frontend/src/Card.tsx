@@ -4,12 +4,13 @@ interface CardProps {
     title: string;
     content: string;
     link : string;
+    time_stamp : string;
 }
 
-export default function Card({title, content, link} : CardProps){
+export default function Card({title, content, time_stamp, link} : CardProps){
     const navigate = useNavigate();
     return (
-        <div className="border m-5 p-5" onClick={
+        <div className="border m-5 p-5 md:w-1/3" onClick={
             () => {
                 navigate(`/blog/${link}`);
             }
@@ -17,7 +18,12 @@ export default function Card({title, content, link} : CardProps){
             <div className="text text-3xl">
                 {title}
             </div>
-            <div>{content}</div>
+            <div>
+                {time_stamp}
+            </div>
+            <div>
+                {content}
+            </div>
         </div>
     )
 }

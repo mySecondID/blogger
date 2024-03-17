@@ -31,8 +31,9 @@ app.use("*", async (c, next) => {
 });
 
 app.use('/api/v1/blog/*', async (c, next) => {
-	const jwt = c.req.header('Authorization');
-	// console.log(jwt)
+	const body = await c.req.json();
+	// console.log(body)
+	const jwt = body.headers['Authorization'];
 	if (!jwt) {
 		c.status(401);
 		return c.json({ error: "unauthorized" });

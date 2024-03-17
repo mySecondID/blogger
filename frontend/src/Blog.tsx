@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useMemo, useState } from "react";
 import Card from "./Card";
+import NavBar from "./NavBar";
 
 export default function Blog(){
     const authorID = useParams().id;
@@ -17,20 +18,20 @@ export default function Blog(){
             console.log(res.data);
             content = res.data;
             setContent(res.data);
-            // content.forEach(e => {
-            //     console.log(e.title, e.content)
-            // })
         }catch(err){
             alert("error");
         }
     }, []);
     return(
-        <div>
-            {
-                content.map((ele, index) => (
-                    <Card key = {index} title = {ele.title} content = {ele.content} link = {ele.id} />
-                ))
-            }
-        </div>
+        <>
+            <NavBar />
+            <div className="flex-col justify-between">
+                {
+                    content.map((ele : {title : string, content : string, id : string, time_stamp : string}, index) => (
+                        <Card key = {index} title = {ele.title} content = {ele.content} link = {ele.id} time_stamp = {time_stamp} />
+                    ))
+                }
+            </div>
+        </>
     )
 }
