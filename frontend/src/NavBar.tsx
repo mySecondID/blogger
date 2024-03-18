@@ -20,7 +20,7 @@ export default function NavBar(){
                 <div className = "px-5">
                     <img className='object-cover w-16 h-16' src = {dummy_pfp} 
                     onClick={() => {
-                        navigate(`/blog/${Cookies.get('id')}`);                    
+                        navigate(`/blogs/${Cookies.get('id')}`);                    
                     }} />
                 </div>
                 <div>

@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client/scripts/default-index.js';
 import {Hono} from 'hono'
-import { Router } from 'itty-router'
+import { cors } from 'hono/cors';
+import { decode, sign, verify } from 'hono/jwt'
 
-const blogRouter  = new Hono<{
+const blogRouter = new Hono<{
 	Bindings: {
 		DATABASE_URL: string,
 		DIRECT_URL : string,
@@ -13,31 +14,57 @@ const blogRouter  = new Hono<{
 }>();
 
 
+blogRouter.use('/*', async (c, next) => {
+	try{
+        // const body = await c.req.json();
+        // console.log(body)
+        const jwt = c.req.header("Authorization");
+        if (!jwt) {
+            c.status(401);
+            return c.json({ error: "unauthorized" });
+        }
+		const token = jwt.split(' ')[1];
+		const payload = await verify(token, c.env.JWT_SECRET);
+		if(!payload){
+			c.status(401);
+			return c.json({ error: "unauthorized" });
+		}
+		await next();
+	}catch(err){
+		const obj = {
+			msg : "yoyoyoyoyo"
+		}
+		return new Response(JSON.stringify(obj), {
+			status : 400
+		})
+	}
+});
+
 
 
 blogRouter.post('/', async c => {
     const body = await c.req.json();
-    console.log(body);
+    // console.log(body);
     try{
         const res = await c.get('prisma').post.create({
             data : {
                 title: body.title,
-                content : body.content
+                content : body.content,
+                authorId : body.id
             }, select : {
                 id : true
             }
         });
 
-        return new Response (JSON.stringify({
-            msg : "success"
-        }),{
+        return new Response (JSON.stringify(res),{
             status : 200,
         })
     }catch(err){
+        console.log(err);
         return new Response (JSON.stringify({
             msg : err
         }),{
-            status : 400,
+            status : 403,
         })
     }
 });
@@ -85,6 +112,7 @@ blogRouter.put('/', async c => {
 
 blogRouter.get('/bulk/:id', async c => {
     const authorID = c.req.param('id');
+    console.log(authorID);
     try{
         const res = await c.get('prisma').post.findMany({
             where : {
@@ -96,14 +124,23 @@ blogRouter.get('/bulk/:id', async c => {
                 id : true,
                 time : true
             }
-        })
+        });
+        console.log(res);
+        if(!res){
+            return new Response (JSON.stringify({
+                msg : "post not found"
+            }),{
+                status : 404,
+            })
+        }
         return new Response (JSON.stringify(res),{
             status : 200,
-        })
+        });
     }catch(err){
         return new Response (JSON.stringify({msg : err}), {status : 400});
     }
      
+
 });
 
 
@@ -126,7 +163,7 @@ blogRouter.get('/:id', async c => {
             return new Response (JSON.stringify({
                 msg : "post not found"
             }),{
-                status : 403,
+                status : 404,
             })
         }
         return new Response (JSON.stringify(res),{

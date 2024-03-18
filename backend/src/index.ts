@@ -3,7 +3,6 @@ import { Router } from 'itty-router'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import {z} from 'zod'
-import { decode, sign, verify } from 'hono/jwt'
 import blogRouter from '../routers/blogRouter'
 import userRouter from '../routers/userRouter'
 import { cors } from 'hono/cors'
@@ -20,9 +19,9 @@ const app = new Hono<{
 	}
 }>();
 
-app.use('/api/*', cors())
+app.use('/*', cors())
 
-app.use("*", async (c, next) => {
+app.use('/*', async (c, next) => {
 	const prisma = new PrismaClient({
         datasourceUrl: c.env.DATABASE_URL,
     }).$extends(withAccelerate());
@@ -30,36 +29,9 @@ app.use("*", async (c, next) => {
 	await next();
 });
 
-app.use('/api/v1/blog/*', async (c, next) => {
-	const body = await c.req.json();
-	// console.log(body)
-	const jwt = body.headers['Authorization'];
-	if (!jwt) {
-		c.status(401);
-		return c.json({ error: "unauthorized" });
-	}
-	try{
-		const token = jwt.split(' ')[1];
-		// console.log(token)
-		const payload = await verify(token, c.env.JWT_SECRET);
-		if(!payload){
-			c.status(401);
-			return c.json({ error: "unauthorized" });
-		}
-		await next()
-	}catch(err){
-		const obj = {
-			msg : "wrong token"
-		}
-		return new Response(JSON.stringify(obj), {
-			status : 400
-		})
-	}
-});
 
-
-app.route('/api/v1/blog', blogRouter)
-app.route('/api/v1/user', userRouter)
+app.route('/api/v1/blog/', blogRouter)
+app.route('/api/v1/user/', userRouter)
 
 
 

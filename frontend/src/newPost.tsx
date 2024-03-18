@@ -27,14 +27,19 @@ export default function NewPost(){
                     alert("Limits not followed!");
                 }else{
                     try{
-                        const response = await axios.post("http://localhost:8787/api/v1/blog/", {
+                        const response = await axios.post("http://localhost:8787/api/v1/blog/", 
+                        {
                             title : title,
                             content : content,
+                            id : Cookies.get('id'),
+                            
+                        },
+                        {
                             headers: {
-                                'Authorization' : `Bearer ${Cookies.get('token')}`
+                                Authorization : `Bearer ${Cookies.get('token')}`
                             }
                         });
-                        const body = response.data;
+                        const body = await response.data;
                         console.log(body);
                         navigate(`/blog/${body.id}`);
                     }catch(err){
