@@ -20,8 +20,8 @@ export default function NewPost(){
         <NavBar />
         <div className="flex flex-col sm:justify-center sm:items-center">
             <div className="text text-3xl m-5">New Post</div>
-            <input className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter title" onChange = {(e: EventHandler) => setTitle(e.target.value)} />
-            <textarea rows = {15} cols = {20} className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter content" onChange = {(e: EventHandler) => setContent(e.target.value)} />
+            <input className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter title" onChange = {(e: any) => setTitle(e.target.value)} />
+            <textarea rows = {15} cols = {20} className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter content" onChange = {(e: any) => setContent(e.target.value)} />
             <button 
             className="border border-black bg-black text-white hover:text-black hover:bg-white m-2 p-3 rounded-lg"
             onClick = {async () => {

@@ -25,8 +25,10 @@ export default function Blog(){
                     content = res.data;
                     setContent(res.data);
                 }
-            }).catch(err =>
+            }).catch(err =>{
+                console.log(err)
                 navigate('/')
+            }
             )
     }, []);
     return(
