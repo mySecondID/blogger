@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import NavBar from "./NavBar";
 import Card from "./Card";
-
+import { REACT_APP_BACKEND_URL } from "./config";
 
 function App() {
   const navigate = useNavigate();
@@ -13,8 +13,9 @@ function App() {
     if(!Cookies.get('token')){
       navigate('/login');
     }else{
+      // console.log(REACT_APP_BACKEND_URL);
       try{
-        axios.get("http://localhost:8787/api/v1/blog/bulk", {
+        axios.get(`${REACT_APP_BACKEND_URL}/api/v1/blog/bulk`, {
           headers:{
             Authorization: `Bearer ${Cookies.get('token')}`
           }
@@ -23,6 +24,7 @@ function App() {
           setPosts(res.data)
         });
       }catch(err){
+
         navigate("/login");
       }
     }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import NavBar from "./NavBar";
+import { REACT_APP_BACKEND_URL } from "./config";
 
 export default function Post(){
     const id = useParams().id;
@@ -14,7 +15,7 @@ export default function Post(){
     });
     useEffect(() => {
         try{
-            axios.get(`http://localhost:8787/api/v1/blog/${id}`, {
+            axios.get(`${REACT_APP_BACKEND_URL}/api/v1/blog/${id}`, {
                 headers: {
                     'Authorization' : `Bearer ${Cookies.get('token')}`
                 }

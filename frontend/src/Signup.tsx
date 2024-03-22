@@ -2,6 +2,8 @@ import { EventHandler, useState } from "react";
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { REACT_APP_BACKEND_URL } from "./config";
+
 
 export default function Signup(){
     const [name, setUsername] = useState();
@@ -18,7 +20,7 @@ export default function Signup(){
             <button 
             className="border border-black bg-black text-white hover:text-black hover:bg-white m-2 p-3 rounded-lg"onClick = {async () => {
                 try{
-                    const response = await axios.post("http://localhost:8787/api/v1/user/signup", {
+                    const response = await axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signup`, {
                         name : name,
                         password : password,
                         email : email

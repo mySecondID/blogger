@@ -4,6 +4,7 @@ import axios from "axios";
 import { Suspense, useEffect, useState } from "react";
 import Card from "./Card";
 import NavBar from "./NavBar";
+import { REACT_APP_BACKEND_URL } from "./config";
 
 export default function Blog(){
     const authorID = useParams().id;
@@ -12,7 +13,7 @@ export default function Blog(){
     useEffect(() => {
     //     console.log(`http://localhost:8787/api/v1/blog/bulk/${authorID}`)
         
-            axios.get(`http://localhost:8787/api/v1/blog/bulk/${authorID}`, {
+            axios.get(`${REACT_APP_BACKEND_URL}/api/v1/blog/bulk/${authorID}`, {
             headers:{
                 Authorization: `Bearer ${Cookies.get('token')}`
             }
