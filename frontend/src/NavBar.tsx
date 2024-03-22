@@ -1,5 +1,3 @@
-import logo from './assets/react.svg';
-import dummy_pfp from './assets/dummy-pic.png'
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
@@ -7,24 +5,35 @@ export default function NavBar(){
     const navigate = useNavigate();
 
     return (
-        <div className="flex justify-between p-2 m-2 border-black">
-            <img src = {logo} />
+        <div className="flex justify-between px-3 py-2 border border-stale-200 bg-sky-100">
+            <div className='text text-3xl p-2 hover:text-blue-400' onClick={() => {
+                navigate('/')
+            }}>
+                Blogger
+            </div>
             <div className="flex">
-                <div className='px-10'>
-                    <button className='bg-green-700 text-white px-5 p-3 rounded-full' onClick={() => {
+                <div className='px-5'>
+                    <button onClick={() => {
                         navigate(`/newPost`);
-                    }}> 
-                        + 
-                    </button>    
+                    }}className='px-5 py-3 border border-black rounded-md hover:bg-blue-200 hover:border-slate-100'>
+                        Add post 
+                    </button>
+                    
                 </div>  
                 <div className = "px-5">
-                    <img className='object-cover w-16 h-16' src = {dummy_pfp} 
-                    onClick={() => {
+                    <button onClick={() => {
                         navigate(`/blogs/${Cookies.get('id')}`);                    
-                    }} />
+                    }}  className='px-5 p-3 border border-black rounded-md hover:bg-blue-200 hover:border-slate-100'>
+                        Profile 
+                    </button>
                 </div>
                 <div>
-                    <button className='px-5 p-3 border border-black rounded-lg hover:bg-black hover:text-white'>
+                    <button className='px-5 p-3 border border-black rounded-md hover:bg-blue-200 hover:border-slate-100'
+                    onClick={() => {
+                       Cookies.remove('id'); 
+                       Cookies.remove('token'); 
+                       navigate('/login')
+                    }}>
                         Logout 
                     </button>
                 </div>

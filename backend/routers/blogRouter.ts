@@ -144,6 +144,34 @@ blogRouter.get('/bulk/:id', async c => {
 });
 
 
+blogRouter.get('/bulk', async c => {
+    try{
+        const res = await c.get('prisma').post.findMany({
+            select : {
+                title : true,
+                content : true,
+                id : true,
+                time : true
+            }
+        });
+        if(!res){
+            return new Response (JSON.stringify({
+                msg : "post not found"
+            }),{
+                status : 404,
+            })
+        }
+        return new Response (JSON.stringify(res),{
+            status : 200,
+        });
+    }catch(err){
+        return new Response (JSON.stringify({msg : err}), {status : 400});
+    }
+     
+
+});
+
+
 blogRouter.get('/:id', async c => {
     // console.log(c);
     const postID = c.req.param('id');
@@ -155,9 +183,11 @@ blogRouter.get('/:id', async c => {
             }, select : {
                 title : true,
                 content : true,
-                time : true
+                time : true,
+                authorId : true
             }
         });
+        
         // console.log(res);
         if(!res){
             return new Response (JSON.stringify({

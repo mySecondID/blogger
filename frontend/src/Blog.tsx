@@ -1,44 +1,45 @@
 import Cookies from "js-cookie";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Card from "./Card";
 import NavBar from "./NavBar";
 
 export default function Blog(){
     const authorID = useParams().id;
-    let [content, setContent] = useState([{
-        title: "loading",
-        content: "loading",
-        time_stamp: "loading",
-        id: "loading"
-    }]);
+    const navigate = useNavigate();
+    let [content, setContent] = useState([]);
     useEffect(() => {
-        console.log(`http://localhost:8787/api/v1/blog/bulk/${authorID}`)
-        axios.get(`http://localhost:8787/api/v1/blog/bulk/${authorID}`, {
+    //     console.log(`http://localhost:8787/api/v1/blog/bulk/${authorID}`)
+        
+            axios.get(`http://localhost:8787/api/v1/blog/bulk/${authorID}`, {
             headers:{
                 Authorization: `Bearer ${Cookies.get('token')}`
             }
-        }).then(res => {
-            if(!res){
-                console.log("chud gaya");
-            }else{
-                console.log(res.data);
-                content = res.data;
-                setContent(res.data);
-            }
-        })
+            }).then(res => {
+                if(!res){
+                    navigate('/login')
+                }else{
+                    console.log(res.data);
+                    content = res.data;
+                    setContent(res.data);
+                }
+            }).catch(err =>
+                navigate('/')
+            )
     }, []);
     return(
-        <>
+        <div>
             <NavBar />
-            <div className="flex-col justify-between">
-                {
-                    content.map((ele : {title : string, content : string, id : string, time: any}, index) => (
-                        <Card key = {index} title = {ele.title} content = {ele.content} link = {ele.id} time_stamp = {ele.time} />
-                    ))
-                }
-            </div>
-        </>
+                <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+                    <Suspense fallback = "loading" >
+                    {
+                        content.map((ele : {title : string, content : string, id : string, time: string}, index) => (
+                            <Card key = {index} title = {ele.title} content = {ele.content} link = {ele.id} time_stamp = {ele.time} />
+                        ))
+                    }    
+                    </Suspense>
+                </div>
+        </div>
     )
 }
