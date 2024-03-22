@@ -37,6 +37,11 @@ export default function Signin(){
                     alert(err);
                 }
             }}>Login</button>
+            <button 
+            className="border border-black bg-black text-white hover:text-black hover:bg-white m-2 p-3 rounded-lg"
+            onClick = {() => {
+                navigate('/signup');
+            }}>Create New Account</button>
         </div>
     );
 }
