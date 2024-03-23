@@ -5,17 +5,18 @@ export default function NavBar(){
     const navigate = useNavigate();
 
     return (
-        <div className="flex justify-between px-3 py-2 border border-stale-200 bg-sky-100">
-            <div className='text text-3xl p-2 hover:text-blue-400' onClick={() => {
+        <>
+        <div className="flex justify-between px-3 py-2 border border-stale-200 bg-neutral-100">
+            <div className='text font-medium text-3xl py-1 hover:text-neutral-400' onClick={() => {
                 navigate('/')
             }}>
                 Blogger
             </div>
             <div className="flex">
-                <div className='px-5'>
+                <div className='px-3'>
                     <button onClick={() => {
                         navigate(`/newPost`);
-                    }}className='px-5 py-3 border border-black rounded-md hover:bg-blue-200 hover:border-slate-100'>
+                    }}className='py-2 px-5 border border-black rounded-md hover:bg-neutral-200'>
                         Add post 
                     </button>
                     
@@ -23,12 +24,12 @@ export default function NavBar(){
                 <div className = "px-5">
                     <button onClick={() => {
                         navigate(`/blogs/${Cookies.get('id')}`);                    
-                    }}  className='px-5 p-3 border border-black rounded-md hover:bg-blue-200 hover:border-slate-100'>
+                    }}  className='py-2 px-5 border border-black rounded-md hover:bg-neutral-200'>
                         Profile 
                     </button>
                 </div>
                 <div>
-                    <button className='px-5 p-3 border border-black rounded-md hover:bg-blue-200 hover:border-slate-100'
+                    <button className='py-2 px-5 border border-black rounded-md hover:bg-neutral-400'
                     onClick={() => {
                        Cookies.remove('id'); 
                        Cookies.remove('token'); 
@@ -39,5 +40,6 @@ export default function NavBar(){
                 </div>
             </div>
         </div>
+        </>
     );
 }

@@ -32,14 +32,14 @@ export default function Post(){
         <div>
             <NavBar />
             <div className="p-5 m-5">
-                <div className="text text-3xl p-5 m-5">
+                <div className="text text-3xl p-5 m-5 md:w-2/3 font-bold">
                     {content.title}
                 </div>
-                <div className="px-5 mx-5">
+                <div className="px-5 mx-5 font-mono">
                     {content.time}
                 </div>
                 
-                <div className="text p-5 m-5">
+                <div className="text p-5 m-5 md:w-2/3">
                     {content.content}
                 </div>
             </div>

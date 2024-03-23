@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import NavBar from "./NavBar";
+import Loading from "./Loading";
 import Card from "./Card";
 import { REACT_APP_BACKEND_URL } from "./config";
 
 function App() {
   const navigate = useNavigate();
   let [posts, setPosts] = useState([]);
+  let [isLoading, setLoading] = useState(true);
   useEffect(() => {
     if(!Cookies.get('token')){
       navigate('/login');
@@ -22,9 +24,10 @@ function App() {
         }).then(res => {
           console.log(res.data);
           setPosts(res.data)
+          isLoading = false;
+          setLoading(false)
         });
       }catch(err){
-
         navigate("/login");
       }
     }
@@ -33,13 +36,19 @@ function App() {
   return (
     <div className="">
       <NavBar />
-      <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+      
       {
-        posts.map((ele : {title : string, content : string, id : string, time: string}, index) => (
-            <Card key = {index} title = {ele.title} content = {ele.content} link = {ele.id} time_stamp = {ele.time} />
-        ))
+        isLoading ? 
+          <Loading />
+        :
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+          {
+              posts.map((ele : {title : string, content : string, id : string, time: string}, index) => (
+                  <Card key = {index} title = {ele.title} content = {ele.content} link = {ele.id} time_stamp = {ele.time} />
+              ))
+          }    
+          </div>
       }
-      </div>
     </div>
   );
 }

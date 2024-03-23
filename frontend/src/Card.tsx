@@ -36,18 +36,18 @@ export default function Card({title, content, time_stamp, link} : CardProps){
         setContent(content)
     }, [])
     return (
-        <div className="border hover:bg-slate-100 m-3 p-5" onClick={
+        <div className="border hover:bg-slate-100 m-4 p-5 rounded-md" onClick={
             () => {
                 navigate(`/blog/${link}`);
             }
         }>
-            <div className="text text-3xl">
+            <div className="text text-3xl font-bold">
                 {title}
             </div>
-            <div>
+            <div className="font-extralight text-xs py-1">
                 {time_stamp}
             </div>
-            <div className="py-2">
+            <div className="py-2 font-sans">
                 {content1}
             </div>
         </div>
