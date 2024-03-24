@@ -3,6 +3,8 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { REACT_APP_BACKEND_URL } from "./config";
+// import Loading from "./Loading";
+
 
 
 export default function Signup(){
@@ -10,6 +12,7 @@ export default function Signup(){
     const [password, setPassword] = useState();
     const [email, setEmail] = useState();
     const navigate = useNavigate();
+    // let [isLoading, setLoading] = useState(true);
 
     return (
         <div className="grid lg:grid-cols-2 md:grid-cols-1 h-screen bg-neutral-100">
@@ -31,7 +34,8 @@ export default function Signup(){
                         Cookies.set('id', body.id);
                         navigate(`/user/${Cookies.get('id')}`);
                     }catch(err){
-                        console.log("error: ", err);
+                        alert(err.response.data.msg);
+                        console.log("error: ", err.response.data.msg);
                     }
                 }}>Sign Up</button>
                 <button 

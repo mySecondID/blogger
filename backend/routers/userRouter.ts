@@ -2,6 +2,7 @@ import {Hono} from 'hono'
 import { Router } from 'itty-router'
 import { PrismaClient } from '@prisma/client/scripts/default-index.js';
 import { decode, sign, verify } from 'hono/jwt'
+import { z } from 'zod';
 
 const userRouter = new Hono<{
 	Bindings: {
@@ -13,12 +14,29 @@ const userRouter = new Hono<{
     }
 }>();
 
-
 interface validBody{
-    name ?: string, 
+    name : string, 
     password: string,
     email : string,
 };
+
+const UserRequest = z.object({
+    name : z.string().min(4).max(15),
+    password: z.string().min(6).max(15),
+    email: z.string().email()
+});
+
+userRouter.use('/*', async (c, next) => {
+    const body = await c.req.json();
+    const response = UserRequest.safeParse(body);
+    if(!response.success){
+        c.status(403);
+        return c.json({
+            msg: "invalid inputs"
+        });
+    }
+    await next();
+});
 
 
 userRouter.post('/signup', async c => {
