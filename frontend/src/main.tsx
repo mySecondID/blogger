@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import Signin from './Signin.tsx'
-import {Routes, BrowserRouter, Route } from 'react-router-dom'
+import {Routes, Route, HashRouter } from 'react-router-dom'
 import Signup from './Signup.tsx'
 import Blog from './Blog.tsx'
 import Post from './Post.tsx'
@@ -9,7 +9,7 @@ import NewPost from './newPost.tsx'
 import './App.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
+  <HashRouter>
       <Routes>
         <Route path = "/login" element = {<Signin />} />
         <Route path = "/signup" element = {<Signup />} />
@@ -18,5 +18,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path = "/blog/:id" element = {<Post />} />
         <Route path = "/newPost" element = {<NewPost />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
 )
