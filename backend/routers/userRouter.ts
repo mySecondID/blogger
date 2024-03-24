@@ -72,6 +72,9 @@ userRouter.post('/signup', async c => {
                 id : true,
             }
         });
+        return new Response (JSON.stringify(res2),{
+            status : 200,
+        })
     }catch(err){
         const obj = {
             msg : err
@@ -80,12 +83,6 @@ userRouter.post('/signup', async c => {
             status : 200,
         })
     }
-    const obj = {
-        msg : "success"
-    };
-    return new Response (JSON.stringify(obj),{
-        status : 200,
-    })
 });
 
 

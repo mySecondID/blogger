@@ -23,20 +23,19 @@ export default function Signup(){
                 <input className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter Email" type = "email" onChange = {(e: any) => setEmail(e.target.value)}></input>
                 <button 
                     className="border border-black bg-neutral-800 text-white hover:text-black hover:bg-white m-2 py-2 px-5 rounded-lg"onClick = {async () => {
-                    try{
-                        const response = await axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signup`, {
+                        axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signup`, {
                             name : name,
                             password : password,
                             email : email
+                        }).then(response => {
+                            const body = response.data;
+                            console.log(body);
+                            Cookies.set('id', body.id);
+                            navigate(`/login`);
+                        }).catch(err => {
+                            alert(err.response.data.msg);
+                            console.log("error: ", err.response.data.msg);
                         });
-                        const body = response.data;
-                        console.log(body);
-                        Cookies.set('id', body.id);
-                        navigate(`/user/${Cookies.get('id')}`);
-                    }catch(err : any){
-                        alert(err.response.data.msg);
-                        console.log("error: ", err.response.data.msg);
-                    }
                 }}>Sign Up</button>
                 <button 
                 className="underline underline-offset-2 p-3"

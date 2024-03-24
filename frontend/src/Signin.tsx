@@ -19,25 +19,25 @@ export default function Signin(){
                 <button 
                 className="border border-black bg-black text-white hover:text-black hover:bg-white m-2 py-2 px-5 rounded-lg"
                 onClick = {async () => {
-                    try{
-                        const response = await axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signin`, {
+                    axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signin`, {
                             name : name,
                             password : password,
                             email : email
+                        }).then((response) => {
+                            const body = response.data;
+                            if(response.status !== 200){
+                                alert(body.msg);
+                            }else{
+                                Cookies.set('token', body.token);
+                                Cookies.set('id', body.id);
+                                navigate("/blogs/" + body.id);
+                            }
+                            console.log(body);
+                        })
+                        .catch(err => {
+                            alert(err.response.data.msg);
+                            console.log("error: ", err.response.data.msg);
                         });
-                        const body = response.data;
-                        if(response.status !== 200){
-                            alert(body.msg);
-                        }else{
-                            Cookies.set('token', body.token);
-                            Cookies.set('id', body.id);
-                            navigate("/blogs/" + body.id);
-                        }
-                        console.log(body);
-                    }catch(err: any){
-                        alert(err.response.data.msg);
-                        console.log("error: ", err.response.data.msg);
-                    }
                 }}>Login</button>
                 <button 
                 className="underline underline-offset-2 p-3"
