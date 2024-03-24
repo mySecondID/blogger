@@ -14,7 +14,6 @@ export default function Post(){
         authorId: ""
     });
     useEffect(() => {
-        try{
             axios.get(`${REACT_APP_BACKEND_URL}/api/v1/blog/${id}`, {
                 headers: {
                     'Authorization' : `Bearer ${Cookies.get('token')}`
@@ -23,10 +22,9 @@ export default function Post(){
                 console.log(res.data);
                 content = res.data;
                 setContent(res.data);
+            }).catch(err => {
+                alert(err.response.data.msg);
             });
-        }catch(err){
-            alert("error");
-        }
     }, []);
     return (
         <div>

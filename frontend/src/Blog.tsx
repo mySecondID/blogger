@@ -14,7 +14,6 @@ export default function Blog(){
     let [isLoading, setLoading] = useState(true);
     
     useEffect(() => {
-    //     console.log(`http://localhost:8787/api/v1/blog/bulk/${authorID}`)
         
             axios.get(`${REACT_APP_BACKEND_URL}/api/v1/blog/bulk/${authorID}`, {
             headers:{
