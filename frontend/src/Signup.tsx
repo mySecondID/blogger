@@ -33,7 +33,7 @@ export default function Signup(){
                         console.log(body);
                         Cookies.set('id', body.id);
                         navigate(`/user/${Cookies.get('id')}`);
-                    }catch(err){
+                    }catch(err : any){
                         alert(err.response.data.msg);
                         console.log("error: ", err.response.data.msg);
                     }

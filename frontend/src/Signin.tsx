@@ -34,7 +34,7 @@ export default function Signin(){
                             navigate("/blogs/" + body.id);
                         }
                         console.log(body);
-                    }catch(err: ErrorCallback){
+                    }catch(err: any){
                         alert(err.response.data.msg);
                         console.log("error: ", err.response.data.msg);
                     }
