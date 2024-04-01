@@ -73,10 +73,13 @@ blogRouter.post('/', async c => {
 blogRouter.put('/', async c => {
     // console.log(c);
     const body = await c.req.json();
+    console.log(body)
     try{
-        const res = await c.get('prisma').post.find({
+        const res = await c.get('prisma').post.findMany({
             where : {
                 id : body.postID
+            },select : {
+                authorId : true
             }
         });
         if(!res){
@@ -86,6 +89,7 @@ blogRouter.put('/', async c => {
                 status : 403,
             })
         }
+        console.log("put", res);
         const res1 = await c.get('prisma').post.update({
             where : {
                 id : body.postID
@@ -94,6 +98,8 @@ blogRouter.put('/', async c => {
                 content : body.content
             }
         });
+        console.log("put", res1);
+
         return new Response (JSON.stringify({
             msg : "success"
         }),{
@@ -101,7 +107,48 @@ blogRouter.put('/', async c => {
         })
     }catch(err){
         return new Response (JSON.stringify({
-            msg : err
+            msg : "err"
+        }),{
+            status : 400,
+        })
+    }
+     
+});
+
+
+blogRouter.delete('/', async c => {
+    // console.log(c);
+    const body = await c.req.json();
+    console.log(body)
+    try{
+        const res = await c.get('prisma').post.findMany({
+            where : {
+                id : body.postID
+            },select : {
+                authorId : true
+            }
+        });
+        if(!res){
+            return new Response (JSON.stringify({
+                msg : "post not found"
+            }),{
+                status : 403,
+            })
+        }
+        const res1 = await c.get('prisma').post.delete({
+            where : {
+                id : body.postID
+            }
+        });
+
+        return new Response (JSON.stringify({
+            msg : "success"
+        }),{
+            status : 200,
+        })
+    }catch(err){
+        return new Response (JSON.stringify({
+            msg : "err"
         }),{
             status : 400,
         })

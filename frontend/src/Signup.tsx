@@ -16,6 +16,14 @@ export default function Signup(){
 
     return (
         <div className="grid lg:grid-cols-2 md:grid-cols-1 h-screen bg-neutral-100">
+            <div className= "hidden bg-neutral-800 lg:block text-white lg:flex lg:flex-col lg:justify-center lg:items-center">
+                <div className="font-bold text-3xl m-5"> 
+                    Welcome to Blogger!
+                </div>
+                <div className="text-1xl"> 
+                    A space where you interact with others, share your ideas!
+                </div>
+            </div>
             <div className="flex flex-col justify-center items-center">
             <div className = "text-3xl p-5 m-3 text-neutral-800 font-bold">Sign Up</div>
                 <input className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter name" onChange = {(e: any) => setUsername(e.target.value)}></input>
@@ -42,9 +50,6 @@ export default function Signup(){
                 onClick = {() => {
                     navigate('/login');
                 }}>Already have an account?</button>
-            </div>
-            <div className="bg-neutral-800 hidden lg:block">
-
             </div>
         </div>
     );

@@ -12,8 +12,8 @@ const PostSchema = z.object({
 })
 
 export default function NewPost(){
-    let [title, setTitle] = useState();
-    let [content, setContent] = useState();
+    let [title, setTitle] = useState("");
+    let [content, setContent] = useState( "");
     const navigate = useNavigate();
 
     return (

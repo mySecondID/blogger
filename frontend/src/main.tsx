@@ -7,6 +7,7 @@ import Blog from './Blog.tsx'
 import Post from './Post.tsx'
 import NewPost from './newPost.tsx'
 import './App.css'
+import EditPost from './Edit.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <HashRouter>
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path = "/blogs/:id" element = {<Blog />} />
         <Route path = "/blog/:id" element = {<Post />} />
         <Route path = "/newPost" element = {<NewPost />} />
+        <Route path = "/edit/:id" element = {<EditPost />} />
       </Routes>
     </HashRouter>
 )

@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "./NavBar";
 import { REACT_APP_BACKEND_URL } from "./config";
 
 export default function Post(){
     const id = useParams().id;
+    const navigate = useNavigate();
     let [content, setContent] = useState({
         title : "loading",
         content : "loading",
@@ -39,6 +40,19 @@ export default function Post(){
                 
                 <div className="text p-5 m-5 md:w-2/3">
                     {content.content}
+                </div>
+                <div className="p-5 m-5">
+                    <button className="mx-2 border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"
+                        onClick={() => {
+                            
+                            navigate(`/edit/${id}`)
+                        }}
+                    >
+                    Edit
+                    </button>
+                    <button className="border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white">
+                    Delete
+                    </button>
                 </div>
             </div>
         </div>
