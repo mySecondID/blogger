@@ -16,7 +16,7 @@ export default function Signup(){
 
     return (
         <div className="grid lg:grid-cols-2 md:grid-cols-1 h-screen bg-neutral-100">
-            <div className= "hidden bg-neutral-800 lg:block text-white lg:flex lg:flex-col lg:justify-center lg:items-center">
+            <div className= "hidden bg-neutral-800 lg:flex text-white lg:flex-col lg:justify-center lg:items-center">
                 <div className="font-bold text-3xl m-5"> 
                     Welcome to Blogger!
                 </div>

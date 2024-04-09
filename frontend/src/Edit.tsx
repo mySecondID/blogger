@@ -69,7 +69,8 @@ export default function EditPost(){
                                 // content = res.content;
                             }
                         }).catch(err => {
-                            alert('some trouble took place')
+                            console.log(err);
+                            alert('some trouble took place');
                             navigate('/')
                         })
                    
