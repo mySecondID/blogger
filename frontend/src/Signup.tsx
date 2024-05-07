@@ -3,6 +3,7 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { REACT_APP_BACKEND_URL } from "./config";
+import spinner from './assets/spinner.gif'
 // import Loading from "./Loading";
 
 
@@ -12,7 +13,7 @@ export default function Signup(){
     const [password, setPassword] = useState();
     const [email, setEmail] = useState();
     const navigate = useNavigate();
-    // let [isLoading, setLoading] = useState(true);
+    let [loading, setLoading] = useState(false);
 
     return (
         <div className="grid lg:grid-cols-2 md:grid-cols-1 h-screen bg-neutral-100">
@@ -31,6 +32,7 @@ export default function Signup(){
                 <input className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter Email" type = "email" onChange = {(e: any) => setEmail(e.target.value)}></input>
                 <button 
                     className="border border-black bg-neutral-800 text-white hover:text-black hover:bg-white m-2 py-2 px-5 rounded-lg"onClick = {async () => {
+                        setLoading(true);
                         axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signup`, {
                             name : name,
                             password : password,
@@ -43,6 +45,7 @@ export default function Signup(){
                         }).catch(err => {
                             alert(err.response.data.msg);
                             console.log("error: ", err.response.data.msg);
+                            setLoading(false);
                         });
                 }}>Sign Up</button>
                 <button 
@@ -50,6 +53,11 @@ export default function Signup(){
                 onClick = {() => {
                     navigate('/login');
                 }}>Already have an account?</button>
+                {
+                    loading ? 
+                    <img src={spinner} alt="Spinner" />
+                    :null
+                }
             </div>
         </div>
     );

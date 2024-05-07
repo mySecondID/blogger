@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "./NavBar";
 import { REACT_APP_BACKEND_URL } from "./config";
+import Skeleton from "./titleSkeleton";
+
 
 export default function Post(){
     const id = useParams().id;
@@ -30,40 +32,31 @@ export default function Post(){
                 alert(err.response.data.msg);
             });
     }, []);
-    if(loading){
-        return <div>
-            <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 200 50"
-            width="200"
-            height="50"
-            >
-            <rect x="0" y="0" width="200" height="50" fill="#f0f0f0" />
-
-            <rect x="20" y="20" width="160" height="10" rx="5" fill="#e0e0e0">
-                <animate
-                attributeName="width"
-                values="20; 160; 20"
-                dur="2s"
-                repeatCount="indefinite"
-                />
-            </rect>
-            </svg>
-        </div>
-    }
     return (
         <div>
             <NavBar />
             <div className="p-5 m-5">
                 <div className="text text-3xl p-5 m-5 md:w-2/3 font-bold">
-                    {content.title}
+                    {
+                        loading ? 
+                        <Skeleton />
+                        :content.title
+                    }
                 </div>
                 <div className="px-5 mx-5 font-mono">
-                    {content.time}
+                    {
+                        loading ? 
+                        <Skeleton />
+                        :content.time
+                    }
                 </div>
                 
                 <div className="text p-5 m-5 md:w-2/3">
-                    {content.content}
+                    {
+                        loading ? 
+                        <Skeleton />
+                        :content.content
+                    }
                 </div>
                 <div className="p-5 m-5">
                     <button className="mx-2 border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"

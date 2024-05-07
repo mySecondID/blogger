@@ -3,12 +3,15 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"
 import { REACT_APP_BACKEND_URL } from "./config";
+import spinner from './assets/spinner.gif'
 
 export default function Signin(){
     const [name, setUsername] = useState();
     const [password, setPassword] = useState();
     const [email, setEmail] = useState();
     const navigate = useNavigate();
+    let [loading, setLoading] = useState(false);
+
     return (
         <div className="grid lg:grid-cols-2 md:grid-cols-1 h-screen bg-neutral-100">
             <div className= "hidden bg-neutral-800 lg:flex text-white lg:flex-col lg:justify-center lg:items-center">
@@ -27,6 +30,8 @@ export default function Signin(){
                 <button 
                 className="border border-black bg-black text-white hover:text-black hover:bg-white m-2 py-2 px-5 rounded-lg"
                 onClick = {async () => {
+                    loading = true;
+                    setLoading(true);
                     axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signin`, {
                             name : name,
                             password : password,
@@ -45,6 +50,7 @@ export default function Signin(){
                         .catch(err => {
                             alert(err.response.data.msg);
                             console.log("error: ", err.response.data.msg);
+                            setLoading(false);
                         });
                 }}>Login</button>
                 <button 
@@ -52,6 +58,11 @@ export default function Signin(){
                 onClick = {() => {
                     navigate('/signup');
                 }}>Create New Account</button>
+                {
+                    loading ? 
+                    <img src={spinner} alt="Spinner" />
+                    :null
+                }
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-export default function f(){
+export default function Skeleton(){
     return <div>
         <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -6,7 +6,6 @@ export default function f(){
         width="200"
         height="50"
         >
-        <rect x="0" y="0" width="200" height="50" fill="#f0f0f0" />
 
         <rect x="20" y="20" width="160" height="10" rx="5" fill="#e0e0e0">
             <animate
