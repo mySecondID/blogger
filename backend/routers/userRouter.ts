@@ -1,8 +1,8 @@
 import {Hono} from 'hono'
-import { Router } from 'itty-router'
 import { PrismaClient } from '@prisma/client/scripts/default-index.js';
 import { decode, sign, verify } from 'hono/jwt'
 import { z } from 'zod';
+
 
 const userRouter = new Hono<{
 	Bindings: {
@@ -13,6 +13,8 @@ const userRouter = new Hono<{
         prisma : PrismaClient
     }
 }>();
+
+
 
 interface validBody{
     name : string, 

@@ -5,6 +5,7 @@ import { withAccelerate } from '@prisma/extension-accelerate'
 import {z} from 'zod'
 import blogRouter from '../routers/blogRouter'
 import userRouter from '../routers/userRouter'
+import verifyRouter from '../routers/verifyRouter'
 import { cors } from 'hono/cors'
 // import { PrismaClient } from '@prisma/client/scripts/default-deno-edge.js'
 
@@ -32,7 +33,7 @@ app.use('/*', async (c, next) => {
 
 app.route('/api/v1/blog/', blogRouter)
 app.route('/api/v1/user/', userRouter)
-
+app.route('/api/v1/verifyPost', verifyRouter);
 
 
 export default app

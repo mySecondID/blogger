@@ -44,13 +44,53 @@ export default function Post(){
                 <div className="p-5 m-5">
                     <button className="mx-2 border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"
                         onClick={() => {
-                            
-                            navigate(`/edit/${id}`)
+                            const token = Cookies.get('token');
+                            axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
+                                token: token,
+                                postID: id
+                            }).then(res => {
+                                if(res.status !== 200){
+                                    alert("You are authorized to do so.")
+                                }else{
+                                    navigate(`/edit/${id}`);
+                                }
+                            }).catch(err =>{
+                                console.log(err);
+                                alert("some error occured");
+                            });
                         }}
                     >
                     Edit
                     </button>
-                    <button className="border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white">
+                    <button className="border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"
+                        onClick={() => {
+                            const token = Cookies.get('token');
+                            axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
+                                token: token,
+                                postID: id
+                            }).then(res => {
+                                if(res.status !== 200){
+                                    alert("You are authorized to do so.")
+                                    navigate(`/`);
+                                }
+                            }).catch(err =>{
+                                console.log(err);
+                                alert("some error occured");
+                            });
+                            axios.post(`${REACT_APP_BACKEND_URL}/api/v1/blog/delete`, {
+                                postID: id
+                            }).then(res => {
+                                if(res.status !== 200){
+                                    alert("some error occured");
+                                }else{
+                                    navigate(`/`);
+                                }
+                            }).catch(err => {
+                                alert("some error occured")
+                                console.log(err)
+                            })
+                        }}
+                    >
                     Delete
                     </button>
                 </div>

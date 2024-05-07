@@ -8,27 +8,12 @@ interface CardProps {
     time_stamp : string;
 }
 
+
+
 export default function Card({title, content, time_stamp, link} : CardProps){
     const navigate = useNavigate();
-    // const dateTime = time_stamp;
-
-    // const dateRegex = /(\d{4}-\d{2}-\d{2})/;
-    // const timeRegex = /T(\d{2}:\d{2}:\d{2})/;
-
-    // const dateMatch = dateTime.match(dateRegex);
-    // const timeMatch = dateTime.match(timeRegex);
-    // const [date, setDate] = useState<string>();
-    // const [time, setTime] = useState<string>();
-    // useEffect( () => {
-    //     if (dateMatch) {
-    //         setDate(dateMatch[1]) 
-    //     }
-
-    //     if (timeMatch) {
-    //         setTime(timeMatch[1])  
-    //     }
-    // }, []);
     let [content1, setContent] = useState("");
+    
     useEffect(() => {
         if(content.length > 20)
             content = content.substring(0, 30) + "    .....";

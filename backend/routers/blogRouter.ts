@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client/scripts/default-index.js';
-import {Hono} from 'hono'
-import { cors } from 'hono/cors';
-import { decode, sign, verify } from 'hono/jwt'
+import { Hono } from 'hono'
+import { decode, sign, verify } from 'hono/jwt';
+
 
 const blogRouter = new Hono<{
 	Bindings: {
@@ -16,8 +16,6 @@ const blogRouter = new Hono<{
 
 blogRouter.use('/*', async (c, next) => {
 	try{
-        // const body = await c.req.json();
-        // console.log(body)
         const jwt = c.req.header("Authorization");
         if (!jwt) {
             c.status(401);
@@ -89,7 +87,6 @@ blogRouter.put('/', async c => {
                 status : 403,
             })
         }
-        console.log("put", res);
         const res1 = await c.get('prisma').post.update({
             where : {
                 id : body.postID
@@ -98,8 +95,7 @@ blogRouter.put('/', async c => {
                 content : body.content
             }
         });
-        console.log("put", res1);
-
+        
         return new Response (JSON.stringify({
             msg : "success"
         }),{
@@ -116,7 +112,7 @@ blogRouter.put('/', async c => {
 });
 
 
-blogRouter.delete('/', async c => {
+blogRouter.post('/delete', async c => {
     // console.log(c);
     const body = await c.req.json();
     console.log(body)
