@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "./NavBar";
 import { REACT_APP_BACKEND_URL } from "./config";
-import f from "./titleSkeleton";
 
 export default function Post(){
     const id = useParams().id;
