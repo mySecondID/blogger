@@ -98,6 +98,12 @@ blogRouter.post('/', async c => {
 blogRouter.put('/', async c => {
     // console.log(c);
     try{
+        if(!c.req.header("postID")){
+            c.status(403);
+            return c.json({
+                msg: "unauthorized"
+            })
+        }
         let jwt = c.req.header("Authorization");
         jwt = jwt?.split(' ')[1];
         const body = await c.req.json();
@@ -143,6 +149,12 @@ blogRouter.put('/', async c => {
 blogRouter.post('/delete', async c => {
     // console.log(c);
     try{
+        if(!c.req.header("postID")){
+            c.status(403);
+            return c.json({
+                msg: "unauthorized"
+            })
+        }
         let jwt = c.req.header("Authorization");
         const body = await c.req.json();
         jwt = jwt?.split(' ')[1];
