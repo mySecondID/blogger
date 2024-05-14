@@ -65,6 +65,11 @@ export default function Post(){
                             axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
                                 token: token,
                                 postID: id
+                            }, {
+                                headers:{
+                                    Authorization: "Bearer " + token,
+                                    postID: id
+                                }
                             }).then(res => {
                                 if(res.status !== 200){
                                     alert("You are authorized to do so.")
@@ -86,26 +91,32 @@ export default function Post(){
                             axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
                                 token: token,
                                 postID: id
+                            }, {
+                                headers:{
+                                    Authorization: `Bearer ${token}`,
+                                    postID: id
+                                }
                             }).then(res => {
                                 if(res.status !== 200){
                                     alert("You are authorized to do so.")
                                     navigate(`/`);
                                     verified = false;
-                                }
+                                }else verified = true;
                             }).catch(err =>{
                                 console.log(err);
                                 verified = false;
                                 alert("some error occured");
                             });
                             if(verified){
-                            axios.post(`${REACT_APP_BACKEND_URL}/api/v1/blog/delete`, {
-                                postID: id
-                            },{
-                                headers:{
-                                    Authorization: `Bearer ${token}`
+                                axios.post(`${REACT_APP_BACKEND_URL}/api/v1/blog/delete`, {
+                                    postID: id,
+                                    token: token
+                                },{
+                                    headers:{
+                                        Authorization: `Bearer ${token}`
+                                    }
                                 }
-                            }
-                            ).then(res => {
+                                ).then(res => {
                                     if(res.status !== 200){
                                         alert("some error occured");
                                     }else{
@@ -115,8 +126,8 @@ export default function Post(){
                                     alert("some error occured")
                                     console.log(err)
                                 })
-                            }}
-                    }
+                            }
+                    }}
                     >
                     Delete
                     </button>

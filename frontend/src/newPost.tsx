@@ -37,7 +37,7 @@ export default function NewPost(){
                             title : title,
                             content : content,
                             id : Cookies.get('id'),
-                            
+                            token: Cookies.get('token')
                         },
                         {
                             headers: {

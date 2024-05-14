@@ -15,10 +15,11 @@ const app = new Hono<{
 
 app.use('/', async c => {
     try{
+        let jwt = c.req.header("Authorization");
         const body = await c.req.json();
         console.log(body)
-        const jwt = body.token;
         console.log(jwt);
+        jwt = jwt?.split(' ')[1];
         if (!jwt) {
             c.status(401);
             return c.json({ error: "unauthorized" });

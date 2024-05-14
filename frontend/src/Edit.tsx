@@ -54,11 +54,13 @@ export default function EditPost(){
                                 postID: id,
                                 id: Cookies.get('id'),
                                 title : title,
-                                content : content
+                                content : content,
+                                token : Cookies.get('token')
                             }    
                             ,{
                                 headers: {
-                                    Authorization : `Bearer ${Cookies.get('token')}`
+                                    Authorization : `Bearer ${Cookies.get('token')}`,
+                                    postID: id
                                 }
                             }    
                         ).then(res => {
