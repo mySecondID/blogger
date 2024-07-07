@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
-import NavBar from "./NavBar";
-import Loading from "./Loading";
-import Card from "./Card";
+import NavBar from "./components/NavBar";
+import Loading from "./components/Loading";
+import Card from "./components/Card";
 import { REACT_APP_BACKEND_URL } from "./config";
 
 function App() {

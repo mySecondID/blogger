@@ -4,7 +4,7 @@ import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import NavBar from "./NavBar";
-import { REACT_APP_BACKEND_URL } from "./config";
+import { REACT_APP_BACKEND_URL } from "../config";
 
 const PostSchema = z.object({
     title : z.string().min(10).max(50),

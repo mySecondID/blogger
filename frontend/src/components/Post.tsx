@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate, useParams } from "react-router-dom";
 import NavBar from "./NavBar";
-import { REACT_APP_BACKEND_URL } from "./config";
-import Skeleton from "./titleSkeleton";
+import { REACT_APP_BACKEND_URL } from "../config";
+import Skeleton from "./ui/titleSkeleton";
 
 
 export default function Post(){
