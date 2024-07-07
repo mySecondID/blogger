@@ -60,7 +60,7 @@ export default function EditPost(){
                             ,{
                                 headers: {
                                     Authorization : `Bearer ${Cookies.get('token')}`,
-                                    postID: id
+                                    PostID: id
                                 }
                             }    
                         ).then(res => {

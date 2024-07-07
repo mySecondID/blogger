@@ -17,6 +17,7 @@ const blogRouter = new Hono<{
 
 blogRouter.use('/*', async (c, next) => {
 	try{
+        console.log('opopop',c.req.header)
         const jwt = c.req.header("Authorization");
         if (!jwt) {
             c.status(401);
@@ -28,31 +29,6 @@ blogRouter.use('/*', async (c, next) => {
 			c.status(401);
 			return c.json({ error: "unauthorized" });
 		}
-        if(c.req.header("postID")){
-            const details = decode(jwt).payload;
-            // console.log(details.email);
-            const userID = await c.get('prisma').user.findMany({
-                where:{
-                    email: details.email
-                },
-                select: {
-                    id: true
-                }
-            });
-            const owner = await c.get('prisma').post.findMany({
-                where:{
-                    id : c.req.header("postID")
-                }, 
-                select: {
-                    authorId: true
-                }
-            });
-            // console.log(userID, owner);
-            if(owner[0].authorId !== userID[0].id){
-                return false;
-            }else
-                return true;
-        }
 		await next();
 	}catch(err){
 		const obj = {
@@ -98,13 +74,7 @@ blogRouter.post('/', async c => {
 blogRouter.put('/', async c => {
     // console.log(c);
     try{
-        if(!c.req.header("postID")){
-            c.status(403);
-            return c.json({
-                msg: "unauthorized"
-            })
-        }
-        let jwt = c.req.header("Authorization");
+        let jwt = c.req.header("Authorization") || "abc abc";
         jwt = jwt?.split(' ')[1];
         const body = await c.req.json();
         const res = await c.get('prisma').post.findMany({
@@ -114,6 +84,31 @@ blogRouter.put('/', async c => {
                 authorId : true
             }
         });
+        const details = decode(jwt).payload;
+            console.log(details.email);
+            const userID = await c.get('prisma').user.findMany({
+                where:{
+                    email: details.email
+                },
+                select: {
+                    id: true
+                }
+            });
+            const owner = await c.get('prisma').post.findMany({
+                where:{
+                    id : body.postID
+                }, 
+                select: {
+                    authorId: true
+                }
+            });
+            // console.log(userID, owner);
+            if(owner[0].authorId !== userID[0].id){
+                c.status(403)
+                return c.json({
+                    msg: "unauthorized"
+                });
+            }
         if(!res){
             return new Response (JSON.stringify({
                 msg : "post not found"
@@ -149,16 +144,34 @@ blogRouter.put('/', async c => {
 blogRouter.post('/delete', async c => {
     // console.log(c);
     try{
-        if(!c.req.header("postID")){
-            c.status(403);
-            return c.json({
-                msg: "unauthorized"
-            })
-        }
-        let jwt = c.req.header("Authorization");
+        let jwt = c.req.header("Authorization") || "abc abc";
         const body = await c.req.json();
-        jwt = jwt?.split(' ')[1];
-
+        jwt = jwt.split(' ')[1];
+        const details = decode(jwt).payload;
+            console.log(details.email);
+            const userID = await c.get('prisma').user.findMany({
+                where:{
+                    email: details.email
+                },
+                select: {
+                    id: true
+                }
+            });
+            const owner = await c.get('prisma').post.findMany({
+                where:{
+                    id : c.req.header("postID")
+                }, 
+                select: {
+                    authorId: true
+                }
+            });
+            // console.log(userID, owner);
+            if(owner[0].authorId !== userID[0].id){
+                c.status(403)
+                return c.json({
+                    msg: "unauthorized"
+                });
+            }
         const res = await c.get('prisma').post.findMany({
             where : {
                 id : body.postID
