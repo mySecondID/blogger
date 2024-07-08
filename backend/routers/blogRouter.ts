@@ -7,7 +7,8 @@ const blogRouter = new Hono<{
 	Bindings: {
 		DATABASE_URL: string,
 		DIRECT_URL : string,
-		JWT_SECRET : string
+		JWT_SECRET : string,
+        MY_BUCKET : R2Bucket
 	}, Variables : {
         prisma : PrismaClient
     }
@@ -17,15 +18,15 @@ const blogRouter = new Hono<{
 
 blogRouter.use('/*', async (c, next) => {
 	try{
-        console.log('opopop',c.req.header)
+        // console.log('opopop',c.req.header("Authorization"))
         const jwt = c.req.header("Authorization");
         if (!jwt) {
             c.status(401);
             return c.json({ error: "unauthorized" });
         }
 		const token = jwt.split(' ')[1];
-		const payload = await verify(token, c.env.JWT_SECRET);
-		if(!payload){
+	    const payload = await verify(token, c.env.JWT_SECRET);
+        if(!payload){
 			c.status(401);
 			return c.json({ error: "unauthorized" });
 		}
@@ -43,15 +44,31 @@ blogRouter.use('/*', async (c, next) => {
 
 
 blogRouter.post('/', async c => {
+    const body = await c.req.parseBody();
+    console.log("body: ", body);
+    let pictureKey = "";
+    if(!body || !body['file']){
+        c.status(400);
+        return c.json({
+            "message": "no file found"
+        })
+    }
+    try{
+        const res = await c.env.MY_BUCKET.put(`${body['title'] || ""}${new Date().getTime()}`, body['file'])
+        console.log("res", res);
+        pictureKey = (res?.key || "");
+    }catch(err){
+        console.log("error in uploader", err);
+    }
     try{
         let jwt = c.req.header("Authorization");
         jwt = jwt?.split(' ')[1];
-        const body = await c.req.json();
         const res = await c.get('prisma').post.create({
             data : {
                 title: body.title,
-                content : body.content,
-                authorId : body.id
+                content: body.content,
+                authorId: body.id,
+                pictureKey: pictureKey
             }, select : {
                 id : true
             }
@@ -144,34 +161,34 @@ blogRouter.put('/', async c => {
 blogRouter.post('/delete', async c => {
     // console.log(c);
     try{
-        let jwt = c.req.header("Authorization") || "abc abc";
+        let jwt = c.req.header("Authorization");
         const body = await c.req.json();
         jwt = jwt.split(' ')[1];
         const details = decode(jwt).payload;
-            console.log(details.email);
-            const userID = await c.get('prisma').user.findMany({
-                where:{
-                    email: details.email
-                },
-                select: {
-                    id: true
-                }
-            });
-            const owner = await c.get('prisma').post.findMany({
-                where:{
-                    id : c.req.header("postID")
-                }, 
-                select: {
-                    authorId: true
-                }
-            });
-            // console.log(userID, owner);
-            if(owner[0].authorId !== userID[0].id){
-                c.status(403)
-                return c.json({
-                    msg: "unauthorized"
-                });
+        console.log("details", details, body);
+        const userID = await c.get('prisma').user.findMany({
+            where:{
+                email: details.email
+            },
+            select: {
+                id: true
             }
+        });
+        const owner = await c.get('prisma').post.findMany({
+            where:{
+                id : body.postID
+            }, 
+            select: {
+                authorId: true
+            }
+        });
+        // console.log(userID, owner);
+        if(owner[0].authorId !== userID[0].id){
+            c.status(403)
+            return c.json({
+                msg: "unauthorized"
+            });
+        }
         const res = await c.get('prisma').post.findMany({
             where : {
                 id : body.postID
@@ -191,6 +208,7 @@ blogRouter.post('/delete', async c => {
                 id : body.postID
             }
         });
+        console.log(res1);
 
         return new Response (JSON.stringify({
             msg : "success"
@@ -282,7 +300,8 @@ blogRouter.get('/:id', async c => {
                 title : true,
                 content : true,
                 time : true,
-                authorId : true
+                authorId : true,
+                pictureKey: true
             }
         });
         
@@ -294,8 +313,12 @@ blogRouter.get('/:id', async c => {
                 status : 404,
             })
         }
-        return new Response (JSON.stringify(res),{
-            status : 200,
+        const respic = await c.env.MY_BUCKET.get(res.pictureKey)
+        c.status(200);
+        // return c.json(res)
+        return c.json({
+            ...res,
+            respic: respic
         })
     }catch(err){
         console.log(err);

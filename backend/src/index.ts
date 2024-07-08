@@ -19,7 +19,9 @@ const app = new Hono<{
 	}
 }>();
 
-app.use('/*', cors())
+app.use('/*', cors({
+	origin: '*'
+}))
 
 app.use('/*', async (c, next) => {
 	const prisma = new PrismaClient({

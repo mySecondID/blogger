@@ -10,11 +10,27 @@ const uploader = new Hono<{
 }>();
 
 
+uploader.get('/getPicture', async c => {
+  const key = c.req.header("pictureKey");
+  if(key){
+    const res = await c.env.MY_BUCKET.get(key)
+    console.log(res);
+    return c.json({
+      msg: "loaded"
+    })
+  }else{
+    return c.json({
+      msg: "not found"
+    })
+  }
+  
+});
+
 
 uploader.post('/fileupload', async (c) => {
   const body = await c.req.parseBody()
   console.log("file", body) 
-  if(!body || !body['myfile']){
+  if(!body || !body['file']){
     c.status(400);
     return c.json({
       "message": "no file found"

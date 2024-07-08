@@ -15,8 +15,13 @@ export default function Post(){
         title : "loading",
         content : "loading",
         time: "",
-        authorId: ""
+        authorId: "",
+        likes: 0,
+        pictureKey: ""
     });
+    let [file, setFile] = useState()
+
+
     useEffect(() => {
             axios.get(`${REACT_APP_BACKEND_URL}/api/v1/blog/${id}`, {
                 headers: {
@@ -31,6 +36,7 @@ export default function Post(){
             }).catch(err => {
                 alert(err.response.data.msg);
             });
+            
     }, []);
     return (
         <div>
@@ -87,7 +93,7 @@ export default function Post(){
                     <button className="border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"
                         onClick={() => {
                             const token = Cookies.get('token');
-                            let verified = false;
+                            let verified = true;
                             axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
                                 token: token,
                                 postID: id
@@ -98,7 +104,7 @@ export default function Post(){
                                 }
                             }).then(res => {
                                 if(res.status !== 200){
-                                    alert("You are authorized to do so.")
+                                    alert("You are not authorized to do so.")
                                     navigate(`/`);
                                     verified = false;
                                 }else verified = true;
