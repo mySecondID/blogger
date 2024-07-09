@@ -1,14 +1,11 @@
 import { useState } from "react";
 import axios from "axios"
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
-import { REACT_APP_BACKEND_URL } from "./config";
-import spinner from './assets/spinner.gif'
-// import Loading from "./Loading";
+import Cookies from "js-cookie"
+import { REACT_APP_BACKEND_URL } from "../config";
+import spinner from '../assets/spinner.gif'
 
-
-
-export default function Signup(){
+export default function Signin(){
     const [name, setUsername] = useState();
     const [password, setPassword] = useState();
     const [email, setEmail] = useState();
@@ -26,33 +23,41 @@ export default function Signup(){
                 </div>
             </div>
             <div className="flex flex-col justify-center items-center">
-            <div className = "text-3xl p-5 m-3 text-neutral-800 font-bold">Sign Up</div>
+                <div className = "text-3xl p-3 m-3 font-bold">Sign In</div>
                 <input className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter name" onChange = {(e: any) => setUsername(e.target.value)}></input>
                 <input className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter password" onChange = {(e: any) => setPassword(e.target.value)}></input>
                 <input className = "border border-black rounded-lg p-2 m-2" placeholder = "Enter Email" type = "email" onChange = {(e: any) => setEmail(e.target.value)}></input>
                 <button 
-                    className="border border-black bg-neutral-800 text-white hover:text-black hover:bg-white m-2 py-2 px-5 rounded-lg"onClick = {async () => {
-                        setLoading(true);
-                        axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signup`, {
+                className="border border-black bg-black text-white hover:text-black hover:bg-white m-2 py-2 px-5 rounded-lg"
+                onClick = {async () => {
+                    loading = true;
+                    setLoading(true);
+                    axios.post(`${REACT_APP_BACKEND_URL}/api/v1/user/signin`, {
                             name : name,
                             password : password,
                             email : email
-                        }).then(response => {
+                        }).then((response) => {
                             const body = response.data;
+                            if(response.status !== 200){
+                                alert(body.msg);
+                            }else{
+                                Cookies.set('token', body.token);
+                                Cookies.set('id', body.id);
+                                navigate("/blogs/" + body.id);
+                            }
                             console.log(body);
-                            Cookies.set('id', body.id);
-                            navigate(`/login`);
-                        }).catch(err => {
+                        })
+                        .catch(err => {
                             alert(err.response.data.msg);
                             console.log("error: ", err.response.data.msg);
                             setLoading(false);
                         });
-                }}>Sign Up</button>
+                }}>Login</button>
                 <button 
                 className="underline underline-offset-2 p-3"
                 onClick = {() => {
-                    navigate('/login');
-                }}>Already have an account?</button>
+                    navigate('/signup');
+                }}>Create New Account</button>
                 {
                     loading ? 
                     <img src={spinner} alt="Spinner" />

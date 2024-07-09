@@ -1,13 +1,13 @@
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
-import Signin from './Signin.tsx'
+import Signin from './components/Signin.tsx'
 import {Routes, Route, HashRouter } from 'react-router-dom'
-import Signup from './Signup.tsx'
-import Blog from './Blog.tsx'
-import Post from './Post.tsx'
-import NewPost from './newPost.tsx'
+import Signup from './components/Signup.tsx'
+import Blog from './components/Blog.tsx'
+import Post from './components/Post.tsx'
+import NewPost from './components/newPost.tsx'
 import './App.css'
-import EditPost from './Edit.tsx'
+import EditPost from './components/Edit.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <HashRouter>

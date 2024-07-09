@@ -13,7 +13,7 @@ const app = new Hono<{
     }
 }>();
 
-app.use('/', async c => {
+app.post('/', async c => {
     try{
         let jwt = c.req.header("Authorization");
         const body = await c.req.json();
@@ -49,7 +49,7 @@ app.use('/', async c => {
         });
         // console.log(userID, owner);
         if(owner[0].authorId !== userID[0].id){
-            c.status(401);
+            c.status(403);
             return c.json({
                 msg: "Unauthorized"
             })

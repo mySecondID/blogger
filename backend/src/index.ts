@@ -1,12 +1,12 @@
 import { Hono } from 'hono'
-import { Router } from 'itty-router'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import blogRouter from '../routers/blogRouter'
 import userRouter from '../routers/userRouter'
 import verifyRouter from '../routers/verifyRouter'
 import { cors } from 'hono/cors'
-// import { PrismaClient } from '@prisma/client/scripts/default-deno-edge.js'
+import { uploader } from '../routers/fileUpload'
+
 
 
 const app = new Hono<{
@@ -19,7 +19,9 @@ const app = new Hono<{
 	}
 }>();
 
-app.use('/*', cors())
+app.use('/*', cors({
+	origin: '*'
+}))
 
 app.use('/*', async (c, next) => {
 	const prisma = new PrismaClient({
@@ -30,6 +32,7 @@ app.use('/*', async (c, next) => {
 });
 
 
+app.route('/api/v1/upload', uploader)
 app.route('/api/v1/blog/', blogRouter)
 app.route('/api/v1/user/', userRouter)
 app.route('/api/v1/verifyPost', verifyRouter);

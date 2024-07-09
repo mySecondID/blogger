@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Card from "./Card";
 import NavBar from "./NavBar";
 import Loading from "./Loading";
-import { REACT_APP_BACKEND_URL } from "./config";
+import { REACT_APP_BACKEND_URL } from "../config";
 
 export default function Blog(){
     const authorID = useParams().id;

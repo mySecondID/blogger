@@ -1,4 +1,4 @@
-import spinner from './assets/spinner.gif'
+import spinner from '../assets/spinner.gif'
 
 export default function Loading(){
     return (
