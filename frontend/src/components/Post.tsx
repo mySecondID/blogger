@@ -19,9 +19,7 @@ export default function Post(){
         likes: 0,
         pictureKey: ""
     });
-    let [file, setFile] = useState()
-
-
+   
     useEffect(() => {
             axios.get(`${REACT_APP_BACKEND_URL}/api/v1/blog/${id}`, {
                 headers: {
@@ -41,102 +39,113 @@ export default function Post(){
     return (
         <div>
             <NavBar />
-            <div className="p-5 m-5">
-                <div className="text text-3xl p-5 m-5 md:w-2/3 font-bold">
-                    {
-                        loading ? 
-                        <Skeleton />
-                        :content.title
-                    }
-                </div>
-                <div className="px-5 mx-5 font-mono">
-                    {
-                        loading ? 
-                        <Skeleton />
-                        :content.time
-                    }
-                </div>
-                
-                <div className="text p-5 m-5 md:w-2/3">
-                    {
-                        loading ? 
-                        <Skeleton />
-                        :content.content
-                    }
-                </div>
-                <div className="p-5 m-5">
-                    <button className="mx-2 border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"
-                        onClick={() => {
-                            const token = Cookies.get('token');
-                            axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
-                                token: token,
-                                postID: id
-                            }, {
-                                headers:{
-                                    Authorization: "Bearer " + token,
+            <div className="p-5 m-5 grid grid-cols-1 lg:grid-cols-2">
+                <div className="max-w-fit">
+                    <div className="text text-3xl p-5 m-5 font-bold">
+                        {
+                            loading ? 
+                            <Skeleton />
+                            :content.title
+                        }
+                    </div>
+                    <div className="px-5 mx-5 font-mono">
+                        {
+                            loading ? 
+                            <Skeleton />
+                            :content.time
+                        }
+                    </div>
+                    
+                    <div className="text p-5 m-5 max-w-screen-md">
+                        {
+                            loading ? 
+                            <Skeleton />
+                            :content.content
+                        }
+                    </div>
+                    <div className="p-5 m-5">
+                        <button className="mx-2 border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"
+                            onClick={() => {
+                                const token = Cookies.get('token');
+                                axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
+                                    token: token,
                                     postID: id
-                                }
-                            }).then(res => {
-                                if(res.status !== 200){
-                                    alert("You are authorized to do so.")
-                                }else{
-                                    navigate(`/edit/${id}`);
-                                }
-                            }).catch(err =>{
-                                console.log(err);
-                                alert("some error occured");
-                            });
-                        }}
-                    >
-                    Edit
-                    </button>
-                    <button className="border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"
-                        onClick={() => {
-                            const token = Cookies.get('token');
-                            let verified = true;
-                            axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
-                                token: token,
-                                postID: id
-                            }, {
-                                headers:{
-                                    Authorization: `Bearer ${token}`,
-                                    postID: id
-                                }
-                            }).then(res => {
-                                if(res.status !== 200){
-                                    alert("You are not authorized to do so.")
-                                    navigate(`/`);
-                                    verified = false;
-                                }else verified = true;
-                            }).catch(err =>{
-                                console.log(err);
-                                verified = false;
-                                alert("some error occured");
-                            });
-                            if(verified){
-                                axios.post(`${REACT_APP_BACKEND_URL}/api/v1/blog/delete`, {
-                                    postID: id,
-                                    token: token
-                                },{
+                                }, {
                                     headers:{
-                                        Authorization: `Bearer ${token}`
+                                        Authorization: "Bearer " + token,
+                                        postID: id
                                     }
-                                }
-                                ).then(res => {
+                                }).then(res => {
                                     if(res.status !== 200){
-                                        alert("some error occured");
+                                        alert("You are authorized to do so.")
                                     }else{
-                                        navigate(`/`);
+                                        navigate(`/edit/${id}`);
                                     }
-                                }).catch(err => {
-                                    alert("some error occured")
-                                    console.log(err)
-                                })
-                            }
-                    }}
-                    >
-                    Delete
-                    </button>
+                                }).catch(err =>{
+                                    console.log(err);
+                                    alert("some error occured");
+                                });
+                            }}
+                        >
+                        Edit
+                        </button>
+                        <button className="border border-black p-1 px-4 rounded-md hover:bg-black hover:text-white"
+                            onClick={() => {
+                                const token = Cookies.get('token');
+                                let verified = true;
+                                axios.post(`${REACT_APP_BACKEND_URL}/api/v1/verifyPost`,{
+                                    token: token,
+                                    postID: id
+                                }, {
+                                    headers:{
+                                        Authorization: `Bearer ${token}`,
+                                        postID: id
+                                    }
+                                }).then(res => {
+                                    if(res.status !== 200){
+                                        alert("You are not authorized to do so.")
+                                        navigate(`/`);
+                                        verified = false;
+                                    }else verified = true;
+                                }).catch(err =>{
+                                    console.log(err);
+                                    verified = false;
+                                    alert("some error occured");
+                                });
+                                if(verified){
+                                    axios.post(`${REACT_APP_BACKEND_URL}/api/v1/blog/delete`, {
+                                        postID: id,
+                                        token: token
+                                    },{
+                                        headers:{
+                                            Authorization: `Bearer ${token}`
+                                        }
+                                    }
+                                    ).then(res => {
+                                        if(res.status !== 200){
+                                            alert("some error occured");
+                                        }else{
+                                            navigate(`/`);
+                                        }
+                                    }).catch(err => {
+                                        alert("some error occured")
+                                        console.log(err)
+                                    })
+                                }
+                        }}
+                        >
+                        Delete
+                        </button>
+                    </div>
+                </div>
+                <div className="flex lg:justify-end">
+                {
+                    content.pictureKey ? 
+                    (<div className="m-5 my-10 max-w-96">
+                        <img src = {`https://pub-a12410068845409aaea14effb9d30c1e.r2.dev/${content.pictureKey}`} />
+                    </div>):
+                    (<div></div>)
+                }
                 </div>
             </div>
         </div>

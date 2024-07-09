@@ -179,41 +179,36 @@ blogRouter.post('/delete', async c => {
                 id : body.postID
             }, 
             select: {
-                authorId: true
+                authorId: true,
+                pictureKey: true
             }
         });
         // console.log(userID, owner);
-        if(owner[0].authorId !== userID[0].id){
+        if(owner && owner[0].authorId && userID && userID[0].id && owner[0].authorId !== userID[0].id){
             c.status(403)
             return c.json({
                 msg: "unauthorized"
             });
         }
-        const res = await c.get('prisma').post.findMany({
-            where : {
-                id : body.postID
-            },select : {
-                authorId : true
-            }
-        });
-        if(!res){
-            return new Response (JSON.stringify({
-                msg : "post not found"
-            }),{
-                status : 403,
+
+        try{
+            const res = await c.env.MY_BUCKET.delete(owner[0].pictureKey);
+        }catch(err){
+            c.status(500);
+            return c.json({
+                message: "picture couldn't be deleted"
             })
         }
+        
         const res1 = await c.get('prisma').post.delete({
             where : {
                 id : body.postID
             }
         });
         console.log(res1);
-
-        return new Response (JSON.stringify({
-            msg : "success"
-        }),{
-            status : 200,
+        c.status(200);
+        return c.json({
+            message: "success"
         })
     }catch(err){
         return new Response (JSON.stringify({

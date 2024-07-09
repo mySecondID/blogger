@@ -14,7 +14,7 @@ const PostSchema = z.object({
 export default function NewPost(){
     let [title, setTitle] = useState("");
     let [content, setContent] = useState( "");
-    let [file, setFile] = useState();
+    let [file, setFile] = useState<File | string>();
     const navigate = useNavigate();
 
     const handleSubmit = async () => {
@@ -25,7 +25,9 @@ export default function NewPost(){
         }else{   
             try {
                 const formData = new FormData();
-                formData.append('file', file);
+                if (file) {
+                    formData.append('file', file);
+                }
                 formData.append('title', title);
                 formData.append('content', content);
                 formData.append('id', `${Cookies.get('id')}`);
@@ -53,14 +55,17 @@ export default function NewPost(){
         <NavBar />
         <div className="flex flex-col sm:justify-center">
             <div className="text text-3xl m-5 font-bold">New Post</div>
-            <input className = "border border-none rounded-lg p-2 mx-5" placeholder = "Enter title (10 - 50 chars)" onChange = {(e: any) => setTitle(e.target.value)} />
-            <textarea  className = "border border-none rounded-lg p-2 m-2 mx-5" placeholder = "Enter content (10 - 300 chars)" onChange = {(e: any) => setContent(e.target.value)} />
-            <div className="flex">
-                <input className="m-2 grid justify-center" 
+            <input className = "font-bold border border-none rounded-lg p-2 mx-5 text-3xl" placeholder = "Enter title (10 - 50 chars)" onChange = {(e: any) => setTitle(e.target.value)} />
+            <textarea className = "text max-w-screen-md border border-none rounded-lg p-2 m-2 mx-5" placeholder = "Enter content (10 - 300 chars)" onChange = {(e: any) => setContent(e.target.value)} />
+            <div className="grid justify-center">
+                <input className="m-3" 
                     type="file"
-                    onChange={e => {
-                        file = e.target.files[0];
-                        setFile(e.target.files[0]);
+                    onChange={(e) => {
+                        const selectedFile = e.target.files?.[0];
+                        if (selectedFile) {
+                            file = selectedFile;
+                            setFile(file)
+                        }
                     }}
                 />
             </div>
