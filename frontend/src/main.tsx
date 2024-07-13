@@ -8,8 +8,11 @@ import Post from './components/Post.tsx'
 import NewPost from './components/newPost.tsx'
 import './App.css'
 import EditPost from './components/Edit.tsx'
+import { Provider } from 'react-redux'
+import { store } from './store/store.ts'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
+  <Provider store = {store}>
   <HashRouter>
       <Routes>
         <Route path = "/login" element = {<Signin />} />
@@ -21,4 +24,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path = "/edit/:id" element = {<EditPost />} />
       </Routes>
     </HashRouter>
+  </Provider>
 )
